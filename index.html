@@ -178,26 +178,41 @@
             </div>
             <div class="row justify-content-center">
                 <div class="col-md-6">
-                    <form>
+                    <div class="alert alert-success alert-dismissible fade show
+                        d-none my-alert"
+                        role="alert">
+                        <strong>Terima kasih</strong> Pesan Anda sudah kami
+                        terima
+                        <button type="button" class="btn-close"
+                            data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                    <form name='wpu-contact-form'>
                         <div class="form-group">
                             <label for="name">Nama Lengkap</label>
                             <input type="text" class="form-control"
                                 id="name"
-                                aria-describedby="name">
+                                aria-describedby="name" name="nama">
                         </div>
                         <div class="form-group">
                             <label for="email">Email</label>
                             <input type="email" class="form-control"
                                 id="email"
-                                aria-describedby="email">
+                                aria-describedby="email" name="email">
 
                         </div>
                         <div class="form-group">
                             <label for="pesan">Pesan</label>
-                            <textarea class="form-control" id="pesan" rows="3"></textarea>
+                            <textarea class="form-control" id="pesan" rows="3"
+                                name="pesan"></textarea>
                         </div>
 
-                        <button type="submit" class="btn btn-primary">Submit</button>
+                        <button type="submit" class="btn btn-primary btn-kirim">Submit</button>
+                        <button class="btn btn-primary btn-loading d-none"
+                            type="button" disabled>
+                            <span class="spinner-border spinner-border-sm"
+                                role="status" aria-hidden="true"></span>
+                            Loading...
+                        </button>
                     </form>
                 </div>
             </div>
@@ -220,5 +235,33 @@
             src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
             integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4"
             crossorigin="anonymous"></script>
+
+        <script>
+                const scriptURL = 'https://script.google.com/macros/s/AKfycbxh6MhIQlS7Dr706hVJEIMQPCrfnCmMIH8ZtdF_iAohVgS11UNEFXhN0TaaCrCjT0f7/exec'
+                const form = document.forms['wpu-contact-form']
+                const btnKirim = document.querySelector('.btn-kirim');
+                const btnLoading = document.querySelector('.btn-loading');
+                const myAlert = document.querySelector('.my-alert');
+
+
+                form.addEventListener('submit', e => {
+                  e.preventDefault();
+                  // ketika tombol submit di klik
+                  // tampilkan tombol loading, hilangkan tombol kirim
+                  btnLoading.classList.toggle('d-none');
+                  btnKirim.classList.toggle('d-none');
+                  fetch(scriptURL, { method: 'POST', body: new FormData(form)})
+                    .then(response => {
+                        btnLoading.classList.toggle('d-none');
+                        btnKirim.classList.toggle('d-none');
+                        // tampilkan alert
+                        myAlert.classList.toggle('d-none');
+                        //reset form
+                        form.reset();
+                        console.log('Success!', response)
+                        })
+                    .catch(error => console.error('Error!', error.message))
+                })
+              </script>
     </body>
 </html>
